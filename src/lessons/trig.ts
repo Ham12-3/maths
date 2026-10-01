@@ -185,9 +185,9 @@ export const trig: LessonDef = {
       tl.to([fig.sin, fig.link], { draw: 1, opacity: 1, duration: 0.3 }, '>');
       tl.to(fig.wave, { opacity: 1, duration: 0.2 }, '<');
       pop(tl, fig.W, '<');
-      fig.turn(tl, 360, '>', 4.2, 'none');
+      fig.turn(tl, 360, '>', 4.5, 'none');
       popLabel(tl, name, '>-0.3');
-      fig.turn(tl, 450, '>', 0.8, 'power1.out');
+      tl.to(fig.wave, { width: fig.wave.width * 1.6, duration: 0.3, yoyo: true, repeat: 1 }, '>');
       return tl;
     },
   },

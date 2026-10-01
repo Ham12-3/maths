@@ -45,6 +45,11 @@ export function mountHome(app: HTMLElement, progress: ProgressStore, rerender: (
     const status = progress.status(l.meta.id);
     const p = progress.get(l.meta.id);
     const steps = SECTIONS.filter((s) => p.visited.includes(s)).length;
+    const total = l.practice.length;
+    const solved = p.solved.length;
+    // Seen every part but some puzzles left? Say so, rather than "5 of 5 parts".
+    const detail = steps < SECTIONS.length ? `${steps} of ${SECTIONS.length} parts` : `${solved} of ${total} puzzles solved`;
+    const meter = status === 'done' ? 1 : (steps / SECTIONS.length + solved / total) / 2;
     const li = document.createElement('li');
     li.className = `card status-${status}`;
     li.style.setProperty('--accent', (C as Record<string, string>)[l.meta.accent] ?? C.c);
@@ -56,10 +61,10 @@ export function mountHome(app: HTMLElement, progress: ProgressStore, rerender: (
         <span class="card-title"><span class="sr-only">Lesson ${i + 1}: </span>${l.meta.title}</span>
         <span class="card-blurb">${l.meta.blurb}</span>
         <span class="card-foot">
-          <span class="pill pill-${status}" id="status-${l.meta.id}">${STATUS_TEXT[status]}${status === 'in-progress' ? ` · ${steps} of 5 parts` : ''}</span>
+          <span class="pill pill-${status}" id="status-${l.meta.id}">${STATUS_TEXT[status]}${status === 'in-progress' ? ` · ${detail}` : ''}</span>
           <span class="card-action">${action} <span aria-hidden="true">→</span></span>
         </span>
-        <span class="meter" aria-hidden="true"><span style="width:${(steps / 5) * 100}%"></span></span>
+        <span class="meter" aria-hidden="true"><span style="width:${Math.round(meter * 100)}%"></span></span>
       </a>`;
     list.appendChild(li);
   });

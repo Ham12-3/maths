@@ -93,6 +93,15 @@ export class Handle {
     this.updateAria();
   }
 
+  /** Move the visuals only (no constraints, no callbacks) — for lesson-driven animation. */
+  place(p: V2 | Vector3): void {
+    this.pos.set(p.x, p.y, 'z' in p ? p.z : 0);
+    this.group.position.x = p.x;
+    this.group.position.y = p.y;
+    if (this.opts.space === '3d') this.group.position.z = this.pos.z;
+    this.updateAria();
+  }
+
   updateAria(): void {
     const desc = this.opts.describe?.();
     const keys =

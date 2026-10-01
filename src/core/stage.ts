@@ -107,12 +107,15 @@ export class Stage {
   axes(rect: Rect2D, o: AxesOpts = {}): Group {
     const step = o.step ?? 1;
     const g = new Group();
-    g.add(gridLines(rect, step, o.majorEvery ?? 0));
+    // Grid and axes run well past the rect so wide or tall canvases never show an edge.
+    const span = Math.max(rect.x1 - rect.x0, rect.y1 - rect.y0);
+    const big = { x0: rect.x0 - span, x1: rect.x1 + span, y0: rect.y0 - span, y1: rect.y1 + span };
+    g.add(gridLines(big, step, o.majorEvery ?? 0));
     const w = this.px(2);
     if (rect.y0 <= 0 && rect.y1 >= 0)
-      g.add(new Stroke([{ x: rect.x0, y: 0 }, { x: rect.x1, y: 0 }], { color: C.axis, width: w, z: Z.grid + 0.5 }));
+      g.add(new Stroke([{ x: big.x0, y: 0 }, { x: big.x1, y: 0 }], { color: C.axis, width: w, z: Z.grid + 0.5 }));
     if (!o.noY && rect.x0 <= 0 && rect.x1 >= 0)
-      g.add(new Stroke([{ x: 0, y: rect.y0 }, { x: 0, y: rect.y1 }], { color: C.axis, width: w, z: Z.grid + 0.5 }));
+      g.add(new Stroke([{ x: 0, y: big.y0 }, { x: 0, y: big.y1 }], { color: C.axis, width: w, z: Z.grid + 0.5 }));
     const every = o.labelEvery ?? 1;
     if (every > 0) {
       const lab = (text: string, x: number, y: number, anchor: 'below' | 'left') =>

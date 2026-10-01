@@ -4,7 +4,8 @@ import { linear } from './linear';
 import { pythagoras } from './pythagoras';
 import { quadratics } from './quadratics';
 import { trig } from './trig';
+import { vectors3d } from './vectors3d';
 
-export const LESSONS: LessonDef[] = [pythagoras, linear, quadratics, trig];
+export const LESSONS: LessonDef[] = [pythagoras, linear, quadratics, trig, vectors3d];
 
 export const findLesson = (id: string): LessonDef | undefined => LESSONS.find((l) => l.meta.id === id);

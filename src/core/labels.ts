@@ -70,6 +70,16 @@ export class Label {
     return this;
   }
 
+  /** Change which side of its point the label sits on. */
+  setAnchor(anchor: LabelAnchor): this {
+    const css = ANCHOR[anchor];
+    if (css !== this.anchorCss) {
+      this.anchorCss = css;
+      this.lastX = NaN; // force a re-place next frame
+    }
+    return this;
+  }
+
   setColor(c: string): this {
     this.inner.style.color = c;
     return this;

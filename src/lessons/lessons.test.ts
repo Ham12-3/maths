@@ -55,6 +55,19 @@ describe('lesson definitions follow the engine rules', () => {
         ];
         for (const t of texts) expect((t.match(/\$/g) ?? []).length % 2, t).toBe(0);
       });
+
+      it('has no control characters from mistyped TeX escapes (e.g. "\\theta" → tab)', () => {
+        const texts = [
+          lesson.hook.caption,
+          lesson.explore.caption,
+          lesson.recap.eq,
+          ...lesson.explain.steps.flatMap((s) => [s.caption, ...(s.eq ?? [])]),
+          ...lesson.practice.flatMap((q) => [q.prompt, q.hint, q.explain ?? '', ...(q.input.kind === 'choice' ? q.input.options : [])]),
+          ...lesson.recap.points,
+        ];
+        // eslint-disable-next-line no-control-regex
+        for (const t of texts) expect(/[\t\b\f\v\r]/.test(t), JSON.stringify(t)).toBe(false);
+      });
     });
   }
 });

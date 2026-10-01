@@ -39,6 +39,8 @@ export interface HandleOpts {
   describe?: () => string;
   /** '3d' handles drag on a plane facing the camera and use Shift+↑/↓ for depth. */
   space?: '2d' | '3d';
+  /** Custom arrow-key behaviour (e.g. move round a circle); return the proposed position. */
+  onArrow?: (dir: 'left' | 'right' | 'up' | 'down', pos: Vector3) => Vector3;
 }
 
 export class Handle {
@@ -293,6 +295,20 @@ export class DragController {
   }
 
   private onKey(e: KeyboardEvent, h: Handle): void {
+    const dirs: Record<string, 'left' | 'right' | 'up' | 'down'> = {
+      ArrowLeft: 'left',
+      ArrowRight: 'right',
+      ArrowUp: 'up',
+      ArrowDown: 'down',
+    };
+    const dir = dirs[e.key];
+    if (h.opts.onArrow && dir) {
+      e.preventDefault();
+      h.opts.onStart?.();
+      h.set(h.opts.onArrow(dir, h.pos.clone()));
+      h.opts.onEnd?.();
+      return;
+    }
     const step = h.opts.keyStep ?? 0.5;
     const p = h.pos.clone();
     const is3d = h.opts.space === '3d';

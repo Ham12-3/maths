@@ -570,6 +570,10 @@ button {
 .eq-token {
   display: inline-block;
 }
+/* Never split a single piece of maths across two lines. */
+.katex {
+  white-space: nowrap;
+}
 .controls {
   display: flex;
   flex-direction: column;

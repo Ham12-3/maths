@@ -91,6 +91,13 @@ if (import.meta.env.DEV) {
         const x = (t as gsap.core.Tween).targets()[0] as { className?: string; constructor?: { name: string } } | undefined;
         return `${x?.className || x?.constructor?.name} ${t.progress().toFixed(2)}`;
       }),
+    /** Jump the current animation to a position (0..1000). */
+    scrub: (v: number) => {
+      const s = document.querySelector<HTMLInputElement>('.scrub');
+      if (!s) return;
+      s.value = String(v);
+      s.dispatchEvent(new Event('input'));
+    },
     sceneObjects: () => {
       let n = 0;
       sm?.scene.traverse(() => n++);

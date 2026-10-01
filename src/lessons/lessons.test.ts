@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { LESSONS } from './index';
+import { standardTex } from './quadratics';
 
 describe('lesson definitions follow the engine rules', () => {
   it('has unique ids', () => {
@@ -56,4 +57,14 @@ describe('lesson definitions follow the engine rules', () => {
       });
     });
   }
+});
+
+describe('quadratic formatting', () => {
+  it('writes ax² + bx + c tidily', () => {
+    expect(standardTex(1, 0, -3)).toBe('x^2 - 3');
+    expect(standardTex(-1, 2, 0)).toBe('-x^2 + 2x');
+    expect(standardTex(2, -4, -6)).toBe('2x^2 - 4x - 6');
+    expect(standardTex(0.5, -1, 1)).toBe('0.5x^2 - x + 1');
+    expect(standardTex(0, 0, 0)).toBe('0');
+  });
 });

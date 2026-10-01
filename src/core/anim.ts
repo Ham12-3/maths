@@ -78,3 +78,29 @@ export function flash(tl: gsap.core.Timeline, t: HasOpacity | HasOpacity[], at?:
   const start = list[0]?.opacity ?? 1;
   return tl.fromTo(list, { opacity: start }, { opacity: low, duration: 0.22, yoyo: true, repeat: times * 2 - 1, ease: 'sine.inOut' }, at);
 }
+
+/**
+ * A scrub-safe switch: calls `on()` when the playhead passes `at` going forwards and
+ * `off()` when it passes back again (a plain tl.call() would only ever fire `on`).
+ */
+export function switchAt(tl: gsap.core.Timeline, at: Pos, on: () => void, off: () => void) {
+  const flag = { v: 0 };
+  let state = false;
+  return tl.fromTo(
+    flag,
+    { v: 0 },
+    {
+      v: 1,
+      duration: 0.01,
+      immediateRender: false,
+      onUpdate: () => {
+        const now = flag.v > 0.5;
+        if (now === state) return;
+        state = now;
+        if (now) on();
+        else off();
+      },
+    },
+    at,
+  );
+}
